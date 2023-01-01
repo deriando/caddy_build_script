@@ -25,7 +25,13 @@ def is_new_version(version_tag):
 		return True
 
 def build(version_tag):
-	command = f"docker build --tag deriando/caddy-cloudflare:latest --tag deriando/caddy-cloudflare:{version_tag} {path}"
+	command = f"docker build --tag localbuild/caddy-cloudflare:latest --tag deriando/caddy-cloudflare:latest --tag deriando/caddy-cloudflare:{version_tag} {path}"
+	arr = command.split()
+	process = subprocess.run(arr)
+	return process.returncode
+
+def push():
+	command = f"docker image push --all-tags deriando/caddy-cloudflare"
 	arr = command.split()
 	process = subprocess.run(arr)
 	return process.returncode
@@ -36,10 +42,10 @@ def main():
 		r = json.loads(r)
 		version_tag = r[0]['name']
 		if is_new_version(version_tag):
-			returncode = build(version_tag)
-			return returncode
+			build(version_tag)
+			push()
+			return 0
 
 
 if __name__ == "__main__":
 	main()
-	
