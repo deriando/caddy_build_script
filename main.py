@@ -8,6 +8,11 @@ path = "/".join(path)
 
 def is_new_version(version_tag):
 	file_path = f"{path}/version.txt"
+	
+	# create file if don't exist
+	f = open(file_path, "a+")
+	f.close()
+
 	with open(file_path, "r") as f:
 		saved_version = f.read()
 
